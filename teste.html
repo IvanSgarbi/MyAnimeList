@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>teste MAL</title>
+</head>
+
+<body>
+    <script>
+        var animes = [];
+        function puxar_dados_mal(offset, animes) {
+            var retornou = false;
+            var req = new XMLHttpRequest();
+            req.onreadystatechange = function () {
+                if (req.readyState == 4) {
+                    retornou = true;
+                    // console.log(req.response);
+                    // console.log(req.responseType);
+                    // console.log(req.responseText);
+                    escrever_na_tela(req.response, animes);
+                }
+            }
+            url = "https://myanimelist.net/animelist/DK666/load.json?status=7";
+
+            if (offset){
+                url += "&offset=" + offset;
+            }
+
+            req.open("GET", url);
+            req.send();
+        }
+
+        function escrever_na_tela(json, animes) {
+            json = JSON.parse(json);
+            console.log(json);
+            console.log("entrou na escrever")
+            animes = animes.concat(json);
+            console.log(animes.length);
+
+            if(json.length > 0){
+                puxar_dados_mal(animes.length, animes);
+                return;
+            }
+
+            console.log("Lista carregada");
+
+            for (var cont = 0; cont < animes.length; cont++) {
+                document.body.innerHTML += "<p>" + animes[cont].anime_title + "</p>";
+            }
+        }
+
+        puxar_dados_mal(null, animes);
+    </script>
+</body>
+
+</html>
